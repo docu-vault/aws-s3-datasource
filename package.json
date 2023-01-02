@@ -1,0 +1,50 @@
+{
+    "name": "@docu-vault/aws-s3-datasource",
+    "description": "docu-vault AWS S3 implementation of StorageInterface",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "/dist"
+    ],
+    "scripts": {
+        "prepublishOnly": "npm run tsc",
+        "tsc": "tsc -p tsconfig.json",
+        "build": "npm install && npm run tsc",
+        "cleanup-s3": "aws s3 rm s3://dd-test-customer01-data --recursive",
+        "test-01": "npm run cleanup && mocha -r ts-node/register -r source-map-support/register test/test-S3StorageImpl-01.ts -timeout 5000",
+        "test-02": "npm run cleanup && mocha -r ts-node/register -r source-map-support/register test/test-S3StorageImpl-02.ts -timeout 5000",
+        "lint": "eslint  --config tslint.json 'src-ts/**/*.ts'",
+        "cleanup-local": "rm test/download/*.*   && rm test/download-02/*.*",
+        "cleanup": "npm run cleanup-local || npm run cleanup-s3"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.2.17",
+        "@types/mocha": "^8.2.2",
+        "@types/node": "^14.18.22",
+        "axios": "^0.21.1",
+        "chai": "^4.3.4",
+        "ts-node": "^10.9.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Brahmeswara/bp-config-core.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Brahmeswara/bp-config-core/issues"
+    },
+    "homepage": "https://github.com/Brahmeswara/bp-config-core#readme",
+    "dependencies": {
+        "@aws-sdk/client-s3": "^3.241.0",
+        "@aws-sdk/s3-request-presigner": "^3.241.0",
+        "@aws-sdk/types": "^3.226.0",
+        "@docu-vault/contracts": "^0.0.3",
+        "@docudata/api-handler": "^1.0.9",
+        "@docudata/aws-utils": "^1.0.1",
+        "@docudata/common-utils": "^1.2.5",
+        "@docudata/logger": "^1.0.0",
+        "reflect-metadata": "^0.1.13",
+        "typedi": "^0.10.0",
+        "uuid": "^3.3.2"
+    }
+}
