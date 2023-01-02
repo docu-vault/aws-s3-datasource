@@ -28,12 +28,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Brahmeswara/bp-config-core.git"
+        "url": "git+https://github.com/docu-vault/aws-s3-datasource.git"
     },
     "bugs": {
-        "url": "https://github.com/Brahmeswara/bp-config-core/issues"
+        "url": "https://github.com/docu-vault/aws-s3-datasource/issues"
     },
-    "homepage": "https://github.com/Brahmeswara/bp-config-core#readme",
+    "homepage": "https://github.com/docu-vault/aws-s3-datasource.git#readme",
     "dependencies": {
         "@aws-sdk/client-s3": "^3.241.0",
         "@aws-sdk/s3-request-presigner": "^3.241.0",
