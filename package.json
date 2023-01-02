@@ -39,7 +39,7 @@
         "@aws-sdk/s3-request-presigner": "^3.241.0",
         "@aws-sdk/types": "^3.226.0",
         "@docu-vault/api-handler": "^1.0.0",
-        "@docu-vault/contracts": "^0.0.3",
+        "@docu-vault/contracts": "^0.0.6",
         "@docu-vault/logger": "^1.0.0",
         "reflect-metadata": "^0.1.13",
         "typedi": "^0.10.0",

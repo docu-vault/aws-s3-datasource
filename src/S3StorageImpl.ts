@@ -34,7 +34,7 @@ export class S3Storage implements StorageInterface {
       this.s3 = s3Client;
     }
   
-    async getSignedUrlForUpload (obj: StorageItem, contentType: string) 
+    async getSignedUrlForUpload (obj: StorageItem, contentType: string) : Promise<string>
     {
       logger.debug('getUploadUrl: passed vales are : ', obj);
       const bucketParams = {
@@ -51,7 +51,7 @@ export class S3Storage implements StorageInterface {
       return url;
     }
     
-    async getSignedUrlForDownload (obj: StorageItem) 
+    async getSignedUrlForDownload (obj: StorageItem) : Promise<string>
     {
       logger.debug('getUploadUrl: passed vales are : ', obj);
       const params =  { 
