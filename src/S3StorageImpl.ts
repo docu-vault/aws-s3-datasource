@@ -11,7 +11,7 @@ import {StorageItem} from "@docu-vault/contracts" ;
 import {StorageInterface} from "@docu-vault/contracts";
 import 'reflect-metadata';
 
-const {Logger} = require('@docudata/logger');
+const {Logger} = require('@docu-vault/logger');
 const logger = new Logger('StorageS3Repo: ');
 
 import {Container, Inject, Service } from 'typedi';

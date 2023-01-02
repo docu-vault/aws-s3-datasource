@@ -1,3 +1,3 @@
 
-const {StorageS3Repo} = require('./storage-s3');
-export {StorageS3Repo};
+const {S3Storage} = require('./S3StorageImpl');
+export {S3Storage};

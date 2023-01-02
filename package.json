@@ -38,11 +38,9 @@
         "@aws-sdk/client-s3": "^3.241.0",
         "@aws-sdk/s3-request-presigner": "^3.241.0",
         "@aws-sdk/types": "^3.226.0",
+        "@docu-vault/api-handler": "^1.0.0",
         "@docu-vault/contracts": "^0.0.3",
-        "@docudata/api-handler": "^1.0.9",
-        "@docudata/aws-utils": "^1.0.1",
-        "@docudata/common-utils": "^1.2.5",
-        "@docudata/logger": "^1.0.0",
+        "@docu-vault/logger": "^1.0.0",
         "reflect-metadata": "^0.1.13",
         "typedi": "^0.10.0",
         "uuid": "^3.3.2"

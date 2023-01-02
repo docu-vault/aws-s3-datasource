@@ -8,9 +8,9 @@ import {StorageItem} from "@docu-vault/contracts" ;
 import {StorageInterface} from "@docu-vault/contracts";
 
 
-const {Logger} = require('@docudata/logger');
+const {Logger} = require('@docu-vault/logger');
 const logger = new Logger('S3-tests');
-const dataHandler = require('@docudata/api-handler');
+const dataHandler = require('@docu-vault/api-handler');
 var fs = require('fs');
 const axios = require('axios');
 
