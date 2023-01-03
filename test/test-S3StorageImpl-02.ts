@@ -5,7 +5,7 @@ import 'reflect-metadata';
 import { Container, Inject, Service } from 'typedi';
 
 import {StorageItem} from "@docu-vault/contracts" ;
-import {StorageInterface} from "@docu-vault/contracts";
+import {Storage} from "@docu-vault/contracts";
 
 
 const {Logger} = require('@docu-vault/logger');
@@ -185,7 +185,7 @@ const download = async (signedUrl: string, fileName: string, options: any) =>
 
 describe('AWS S3 Implemenaton of StorageInterface : ReadFromS3 Test Cases', () => {
 
-    const s3Repo : StorageInterface= Container.get('storageRepository');
+    const s3Repo : Storage= Container.get('storageRepository');
     
     it('Test2-001: fileToStorage: Write PDF File', async () => 
     {

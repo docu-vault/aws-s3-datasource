@@ -1,4 +1,9 @@
 //import {  S3 } from "aws-sdk";
+import {Container, Inject, Service } from 'typedi';
+import 'reflect-metadata';
+var fs = require('fs');
+const { pipeline } = require("stream");
+
 import { S3Client, 
   PutObjectCommand, 
   GetObjectCommand,
@@ -8,44 +13,52 @@ import { S3Client,
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import {StorageItem} from "@docu-vault/contracts" ;
-import {StorageInterface} from "@docu-vault/contracts";
-import 'reflect-metadata';
-
+import {Storage} from "@docu-vault/contracts";
 const {Logger} = require('@docu-vault/logger');
+
 const logger = new Logger('StorageS3Repo: ');
 
-import {Container, Inject, Service } from 'typedi';
-var fs = require('fs');
-const { pipeline } = require("stream");
-
-const bucketName = process.env.S3_BUCKET_NAME ;
-const defaultHttpStatusCode : number  = 200 ;
+const GLOBAL_EXPIRY_IN_SECONDS : number = 60 ;
 
 @Service({ transient: true })
-export class S3Storage implements StorageInterface {
-    
+export class S3Storage implements Storage 
+{
     private s3 : S3Client ;
+    private bucketName : string | undefined ; 
+    private aws_region : string | undefined ;
+    private global_expiry_in_seconds : number ;
 
-    constructor(s3Client : S3Client) {
-      if (!bucketName) {
+    constructor(ctx: Map<string, any>) {
+      this.bucketName = process.env.S3_BUCKET_NAME ? process.env.S3_BUCKET_NAME : ctx?.get('S3_BUCKET_NAME') ;
+      this.aws_region = process.env.AWS_REGION ? process.env.AWS_REGION: ctx?.get('AWS_REGION');
+      this.global_expiry_in_seconds =  process.env.EXPIRY_IN_SECONDS ?  Number(process.env.EXPIRY_IN_SECONDS) : GLOBAL_EXPIRY_IN_SECONDS ;
+
+      if (!this.bucketName) {
         logger.error('S3_BUCKET_NAME is not defined');
         throw Error('S3_BUCKET_NAME is not defined');
-      }
-      this.s3 = s3Client;
+      };
+      if (! this.aws_region) {
+        logger.error('AWS_REGION is not defined');
+        throw Error('AWS_REGION is not defined');
+      };
+      this.s3 = new S3Client({ region: this.aws_region });
     }
   
     async getSignedUrlForUpload (obj: StorageItem, contentType: string) : Promise<string>
     {
       logger.debug('getUploadUrl: passed vales are : ', obj);
       const bucketParams = {
-        Bucket: bucketName,
+        Bucket: this.bucketName,
         Key: obj.pathKey
       };
+      // if not value mentioned at the request level, take it from global constant
+      var expiryInSeconds = obj.expiryInSeconds ? obj.expiryInSeconds : this.global_expiry_in_seconds;
+      logger.debug('expiryInSeconds set to: ', expiryInSeconds);
       // Create a command to put the object in the S3 bucket.
       const command = new PutObjectCommand(bucketParams);
       // Create the presigned URL.
       const url : string = await getSignedUrl(this.s3, command, 
-        {expiresIn: obj.expiryInSeconds}
+        {expiresIn: expiryInSeconds}
       );
       logger.debug(`signed url to upload ${obj.pathKey}  is : ${url}`);
       return url;
@@ -55,11 +68,14 @@ export class S3Storage implements StorageInterface {
     {
       logger.debug('getUploadUrl: passed vales are : ', obj);
       const params =  { 
-          Bucket: bucketName,
+          Bucket: this.bucketName,
           Key: obj.pathKey
       };
+      // if not value mentioned at the request level, take it from global constant
+      var expiryInSeconds = obj.expiryInSeconds ? obj.expiryInSeconds : this.global_expiry_in_seconds;
+      logger.debug('expiryInSeconds set to: ', expiryInSeconds);
       const command = new GetObjectCommand(params);
-      const url = await getSignedUrl(this.s3, command, { expiresIn: obj.expiryInSeconds }); 
+      const url = await getSignedUrl(this.s3, command, { expiresIn: expiryInSeconds }); 
       logger.debug(`signed url to download ${obj.pathKey}  is : ${url}`);
       return url;
     }
@@ -81,7 +97,7 @@ export class S3Storage implements StorageInterface {
         const fileStream = fs.createReadStream(localFilename);
         logger.debug(`filename: ${localFilename} , S3 obj full path: ${destObjectname}`);
         const uploadParams = {
-            Bucket: bucketName,
+            Bucket: this.bucketName,
             Key: destObjectname,
             Body: fileStream,
         };
@@ -104,7 +120,7 @@ export class S3Storage implements StorageInterface {
   {
     var returnStatus = true;
     const uploadParams = {
-        Bucket: bucketName,
+        Bucket: this.bucketName,
         Key: objectName,
     };
 
