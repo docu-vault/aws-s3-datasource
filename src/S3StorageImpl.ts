@@ -28,19 +28,11 @@ export class S3Storage implements Storage
     private aws_region : string | undefined ;
     private global_expiry_in_seconds : number ;
 
-    constructor(ctx: Map<string, any>) {
-      this.bucketName = process.env.S3_BUCKET_NAME ? process.env.S3_BUCKET_NAME : ctx?.get('S3_BUCKET_NAME') ;
-      this.aws_region = process.env.AWS_REGION ? process.env.AWS_REGION: ctx?.get('AWS_REGION');
-      this.global_expiry_in_seconds =  process.env.EXPIRY_IN_SECONDS ?  Number(process.env.EXPIRY_IN_SECONDS) : GLOBAL_EXPIRY_IN_SECONDS ;
-
-      if (!this.bucketName) {
-        logger.error('S3_BUCKET_NAME is not defined');
-        throw Error('S3_BUCKET_NAME is not defined');
-      };
-      if (! this.aws_region) {
-        logger.error('AWS_REGION is not defined');
-        throw Error('AWS_REGION is not defined');
-      };
+    constructor() {
+      this.bucketName = process.env.S3_BUCKET_NAME ;
+      this.aws_region = process.env.AWS_REGION ;
+      this.global_expiry_in_seconds =  Number(process.env.EXPIRY_IN_SECONDS) ;
+      this.validateConfig();
       this.s3 = new S3Client({ region: this.aws_region });
     }
   
@@ -139,6 +131,17 @@ export class S3Storage implements Storage
     
     }
     return returnStatus;
+  }
+
+  private validateConfig() {
+    if (!this.bucketName) {
+      logger.error('S3_BUCKET_NAME is not defined');
+      throw Error('S3_BUCKET_NAME is not defined');
+    };
+    if (! this.aws_region) {
+      logger.error('AWS_REGION is not defined');
+      throw Error('AWS_REGION is not defined');
+    };
   }
 
 }
