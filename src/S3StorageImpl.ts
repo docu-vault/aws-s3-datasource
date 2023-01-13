@@ -133,6 +133,7 @@ export class S3Storage implements Storage
     return returnStatus;
   }
 
+
   private validateConfig() {
     if (!this.bucketName) {
       logger.error('S3_BUCKET_NAME is not defined');
